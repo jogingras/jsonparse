@@ -13,12 +13,6 @@ const validateAndLogPerson = (raw: any, source: string) => {
   console.log(`[${source}] ✅ Received person:`, person);
 };
 
-// Shared chunk logging function
-const logChunkReceived = (partialObj: Partial<Person>, source?: string) => {
-  const sourceLabel = source || "Unknown";
-  console.log(`[${sourceLabel}] 🔄 Chunk received - Partial object:`, JSON.stringify(partialObj, null, 2));
-};
-
 // Function to parse using Clarinet
 function parseWithClarinet(jsonChunks: string[]) {
   console.log("\n🔧 Parsing with Clarinet:");
@@ -26,7 +20,7 @@ function parseWithClarinet(jsonChunks: string[]) {
   
   const assembler = createClarinetAssembler<Person>({
     onComplete: (obj) => validateAndLogPerson(obj, "Clarinet"),
-    onChunk: (partialObj, source) => logChunkReceived(partialObj, source)
+    onChunk: (partialObj) => console.log(`🔄 Chunk received - Partial object:`, JSON.stringify(partialObj, null, 2))
   });
 
   // Process chunks
@@ -41,7 +35,7 @@ async function parseWithStreamJson(jsonChunks: string[]) {
   
   const assembler = createStreamJsonAssembler<Person>({
     onComplete: (obj) => validateAndLogPerson(obj, "stream-json"),
-    onChunk: (partialObj, source) => logChunkReceived(partialObj, source)
+    onChunk: (partialObj) => console.log(`🔄 Chunk received - Partial object:`, JSON.stringify(partialObj, null, 2))
   });
 
   // Process chunks
@@ -50,20 +44,6 @@ async function parseWithStreamJson(jsonChunks: string[]) {
   
   // Give a small delay to ensure async processing completes
   await new Promise(resolve => setTimeout(resolve, 100));
-}
-
-// Demo function with only onComplete callback
-function parseOnlyComplete(jsonChunks: string[]) {
-  console.log("\n📦 Parsing with only onComplete callback:");
-  console.log("=" .repeat(40));
-  
-  const assembler = createClarinetAssembler<Person>({
-    onComplete: (obj) => console.log("📦 Complete object received:", obj)
-    // No onChunk callback - will be silent during parsing
-  });
-
-  jsonChunks.forEach(chunk => assembler.write(chunk));
-  assembler.close();
 }
 
 // Demo function to compare both parsers
@@ -85,9 +65,6 @@ async function compareParsers() {
 
   // Parse with stream-json
   await parseWithStreamJson([...testChunks]);
-
-  // Demo with only onComplete callback
-  parseOnlyComplete([...testChunks]);
 
   console.log("\n✨ Comparison complete!");
 }

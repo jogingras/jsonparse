@@ -10,7 +10,7 @@ export interface StreamAssembler<T> {
 
 export interface AssemblerConfig<T> {
   onComplete?: (obj: T) => void;
-  onChunk?: (partialObj: Partial<T>, source?: string) => void;
+  onChunk?: (partialObj: Partial<T>) => void;
 }
 
 export function createStreamJsonAssembler<T>(
@@ -56,7 +56,7 @@ export function createStreamJsonAssembler<T>(
         if (currentState !== lastLoggedState) {
           partialObjects.forEach(partialObj => {
             if (partialObj && Object.keys(partialObj).length > 0) {
-              onChunk(partialObj as Partial<T>, "stream-json");
+              onChunk(partialObj as Partial<T>);
             }
           });
           lastLoggedState = currentState;
