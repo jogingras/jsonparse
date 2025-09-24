@@ -5,9 +5,15 @@ export interface StreamAssembler<T> {
   close(): void;
 }
 
+export interface AssemblerConfig<T> {
+  onComplete?: (obj: T) => void;
+  onChunk?: (partialObj: Partial<T>, source?: string) => void;
+}
+
 export function createClarinetAssembler<T>(
-  onComplete: (obj: T) => void
+  config: AssemblerConfig<T>
 ): StreamAssembler<T> {
+  const { onComplete, onChunk } = config;
   const parser = clarinet.createStream();
   const stack: any[] = [];
   let current: any = null;
@@ -51,7 +57,7 @@ export function createClarinetAssembler<T>(
     if (objectDepth === 0) {
       // Completed a root-level object
       if (current !== null) {
-        onComplete(current as T);
+        onComplete?.(current as T);
         current = null;
       }
     } else if (stack.length > 0) {
@@ -99,6 +105,10 @@ export function createClarinetAssembler<T>(
 
   return {
     write(chunk: string): void {
+      // Log the chunk being received
+      if (onChunk && current !== null) {
+        onChunk({...current} as Partial<T>, "Clarinet");
+      }
       (parser as any).write(chunk);
     },
     
