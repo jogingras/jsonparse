@@ -44,18 +44,6 @@ Run the parser comparison demo:
 npm run dev
 ```
 
-Run the advanced Clarinet demo with complex objects:
-
-```bash
-npm run demo
-```
-
-Run the comprehensive stream-json examples:
-
-```bash
-npm run stream-demo
-```
-
 ### Build and Run
 
 Build the project and run the compiled JavaScript:
