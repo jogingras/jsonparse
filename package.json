@@ -1,0 +1,35 @@
+{
+  "name": "jsonparse-demo",
+  "version": "1.0.0",
+  "description": "A streaming JSON parser using Clarinet with Zod validation",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "json",
+    "streaming",
+    "parser",
+    "clarinet",
+    "zod"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "clarinet": "^0.12.4",
+    "stream-json": "^1.9.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/clarinet": "^0.12.3",
+    "@types/node": "^20.10.0",
+    "@types/stream-json": "^1.7.8",
+    "rimraf": "^5.0.5",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.0"
+  }
+}
